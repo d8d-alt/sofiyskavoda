@@ -51,7 +51,7 @@ PSFWTSESS=$(<<<${POut} grep 'sofia_water_session' | head -1 |  cut -d'=' -f2 | c
 sleep 1
 
 
-ZOut=$(curl -s -k -i -L 'https://www.sofiyskavoda.bg/login' \
+ZOut=$(curl -s -i -L 'https://www.sofiyskavoda.bg/login' \
   -H 'accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7' \
   -H 'accept-language: en-US,en;q=0.9' \
   -H 'cache-control: max-age=0' \
