@@ -19,12 +19,12 @@ WOut=$(curl "${sfWurl}" \
   -H 'upgrade-insecure-requests: 1' \
   -H 'user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36' -i -s  | grep -e 'token' -e 'my_name' -e 'valid_from' -e 'XSRF-TOKEN' -e 'sofia_water_session')
 
-XSRF=$(<<<${WOut} grep -Po 'XSRF-TOKEN=\K[^;]*')
-SFWTSESS=$(<<<${WOut} grep -Po 'sofia_water_session=\K[^;]*')
+XSRF=$(<<<"${WOut}" grep -Po 'XSRF-TOKEN=\K[^;]*')
+SFWTSESS=$(<<<"${WOut}" grep -Po 'sofia_water_session=\K[^;]*')
 
-TOKEN=$(<<<${WOut} grep '_token' | grep -Po 'value="\K[^"]*')
-MNAME=$(<<<${WOut} grep -m1 'my_name' | grep -Po 'id="\K[^"]*')
-VALFROM=$(<<<${WOut} grep valid_from -m1 | grep -Po 'value="\K[^"]*')
+TOKEN=$(<<<"${WOut}" grep '_token' | grep -Po 'value="\K[^"]*')
+MNAME=$(<<<"${WOut}" grep -m1 'my_name' | grep -Po 'id="\K[^"]*')
+VALFROM=$(<<<"${WOut}" grep valid_from -m1 | grep -Po 'value="\K[^"]*')
 sleep 1
 
 
@@ -43,8 +43,8 @@ POut=$(curl -XGET -s -i "${sfWurl}survey/get" \
   -H 'user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36' \
   -H 'x-requested-with: XMLHttpRequest' -L )
 
-PXSRF=$(<<<${POut} grep -m1 -Po 'XSRF-TOKEN=\K[^;]*')
-PSFWTSESS=$(<<<${POut} grep -m1 -Po 'sofia_water_session=\K[^;]*')
+PXSRF=$(<<<"${POut}" grep -m1 -Po 'XSRF-TOKEN=\K[^;]*')
+PSFWTSESS=$(<<<"${POut}" grep -m1 -Po 'sofia_water_session=\K[^;]*')
 sleep 1
 
 
@@ -68,8 +68,8 @@ ZOut=$(curl -s -i -L "${sfWurl}login" \
   -H 'user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36' \
   --data-raw "_token=${TOKEN}&${MNAME}=&valid_from=${VALFROM}&email=${user}&password=${pass}")
 
-NXSRF=$(<<<${ZOut} grep -m1 -Po 'XSRF-TOKEN=\K[^;]*')
-NSFWTSESS=$(<<<${ZOut} grep -m1 -Po 'sofia_water_session=\K[^;]*')
+NXSRF=$(<<<"${ZOut}" grep -m1 -Po 'XSRF-TOKEN=\K[^;]*')
+NSFWTSESS=$(<<<"${ZOut}" grep -m1 -Po 'sofia_water_session=\K[^;]*')
 sleep 1
 
 
@@ -89,4 +89,4 @@ yOut=$(curl -s "${sfWurl}cp/invoice-payments" \
   -H 'upgrade-insecure-requests: 1' \
   -H 'user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36' -L )
 
-<<<${yOut} cat | lynx -dump -stdin | grep 'Клиентски баланс' -A23
+<<<"${yOut}" cat | lynx -dump -stdin | grep 'Клиентски баланс' -A23
