@@ -1,7 +1,7 @@
 #!/bin/bash
 # it needs registration in https://www.sofiyskavoda.bg/
 
-user="" # user from registration 
+user="" # user from registration
 pass="" # pass fron registration
 
 WOut=$(curl 'https://www.sofiyskavoda.bg/' \
@@ -42,8 +42,8 @@ POut=$(curl -XGET -s -i 'https://www.sofiyskavoda.bg/survey/get' \
   -H 'user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36' \
   -H 'x-requested-with: XMLHttpRequest' -L )
 
-PXSRF=$(<<<${WOut} grep -m1 -Po 'XSRF-TOKEN=\K[^;]*')
-PSFWTSESS=$(<<<${WOut} grep -m1 -Po 'sofia_water_session=\K[^;]*')
+PXSRF=$(<<<${POut} grep -m1 -Po 'XSRF-TOKEN=\K[^;]*')
+PSFWTSESS=$(<<<${POut} grep -m1 -Po 'sofia_water_session=\K[^;]*')
 sleep 1
 
 
@@ -67,8 +67,8 @@ ZOut=$(curl -s -i -L 'https://www.sofiyskavoda.bg/login' \
   -H 'user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36' \
   --data-raw "_token=${TOKEN}&${MNAME}=&valid_from=${VALFROM}&email=${user}&password=${pass}")
 
-NXSRF=$(<<<${WOut} grep -m1 -Po 'XSRF-TOKEN=\K[^;]*')
-NSFWTSESS=$(<<<${WOut} grep -m1 -Po 'sofia_water_session=\K[^;]*')
+NXSRF=$(<<<${ZOut} grep -m1 -Po 'XSRF-TOKEN=\K[^;]*')
+NSFWTSESS=$(<<<${ZOut} grep -m1 -Po 'sofia_water_session=\K[^;]*')
 sleep 1
 
 
@@ -89,3 +89,4 @@ yOut=$(curl -s 'https://www.sofiyskavoda.bg/cp/invoice-payments' \
   -H 'user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36' -L )
 
 <<<${yOut} cat | lynx -dump -stdin | grep 'Клиентски баланс' -A23
+
