@@ -43,8 +43,8 @@ POut=$(curl -XGET -s -i "${sfWurl}survey/get" \
   -H 'user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36' \
   -H 'x-requested-with: XMLHttpRequest' -L )
 
-PXSRF=$(<<<"${POut}" grep -m1 -Po 'XSRF-TOKEN=\K[^;]*')
-PSFWTSESS=$(<<<"${POut}" grep -m1 -Po 'sofia_water_session=\K[^;]*')
+XSRF=$(<<<"${POut}" grep -m1 -Po 'XSRF-TOKEN=\K[^;]*')
+SFWTSESS=$(<<<"${POut}" grep -m1 -Po 'sofia_water_session=\K[^;]*')
 sleep 1
 
 
@@ -53,7 +53,7 @@ ZOut=$(curl -s -i -L "${sfWurl}login" \
   -H 'accept-language: en-US,en;q=0.9' \
   -H 'cache-control: max-age=0' \
   -H 'content-type: application/x-www-form-urlencoded' \
-  -b "XSRF-TOKEN=${PXSRF}; sofia_water_session=${PSFWTSESS}" \
+  -b "XSRF-TOKEN=${XSRF}; sofia_water_session=${SFWTSESS}" \
   -H 'origin: https://www.sofiyskavoda.bg' \
   -H 'priority: u=0, i' \
   -H "referer: ${sfWurl}login" \
@@ -68,15 +68,15 @@ ZOut=$(curl -s -i -L "${sfWurl}login" \
   -H 'user-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/150.0.0.0 Safari/537.36' \
   --data-raw "_token=${TOKEN}&${MNAME}=&valid_from=${VALFROM}&email=${user}&password=${pass}")
 
-NXSRF=$(<<<"${ZOut}" grep -m1 -Po 'XSRF-TOKEN=\K[^;]*')
-NSFWTSESS=$(<<<"${ZOut}" grep -m1 -Po 'sofia_water_session=\K[^;]*')
+XSRF=$(<<<"${ZOut}" grep -m1 -Po 'XSRF-TOKEN=\K[^;]*')
+SFWTSESS=$(<<<"${ZOut}" grep -m1 -Po 'sofia_water_session=\K[^;]*')
 sleep 1
 
 
 yOut=$(curl -s "${sfWurl}cp/invoice-payments" \
   -H 'accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7' \
   -H 'accept-language: en-US,en;q=0.9' \
-  -b "XSRF-TOKEN=${NXSRF}; sofia_water_session=${NSFWTSESS}" \
+  -b "XSRF-TOKEN=${XSRF}; sofia_water_session=${SFWTSESS}" \
   -H 'priority: u=0, i' \
   -H "referer: ${sfWurl}cp/consumption-reports" \
   -H 'sec-ch-ua: "Not;A=Brand";v="8", "Chromium";v="150", "Google Chrome";v="150"' \
